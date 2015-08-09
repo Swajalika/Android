@@ -42,6 +42,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "MyGLRenderer";
     public static final float floatMAX=999999;
+    public static float min=0;
+    public static float range = (floatMAX - min) + 1; 
     private Square mSquare;
     
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
@@ -51,19 +53,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public static float ratio;
     public static float w,h;
     public static int number=0;             //total number of sub rectangles of main rectangle
-    public TreeNode temp[];
 
- 
-    public MyGLRenderer(TreeNode[] tmp,int n) {
+    public MyGLRenderer(int n) {
     	number=n;
-		temp=tmp;
-	}
-
-	@Override
+    }
+	
+    @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-        
         IntBuffer max = IntBuffer.allocate(1);
         GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, max);
         Log.d("TAGS","Texture units: " + max.get());
@@ -105,10 +103,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 		root.height=h;
 		root.width=w;
 		root.area = root.height * root.width;
-		root.child=temp;
 		Log.i("TAG","child:"+root.child);
 		for(int l=0;l<number;l++){
-			root.child[l].area=(float) temp[l].area;
+			root.child[l].area=(float) (Math.random()*range)+min; //random values
 		}
         root=Node.mainFunction(root);
         mSquare   = new Square(root);
